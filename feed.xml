@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>小丫么小兔子的萝卜地儿</title>
+    <link>https://seolcho0827.github.io/</link>
+    <description>大爷来玩儿啊</description>
+    <language>zh-cn</language>
+    <generator>Gridea Pro</generator>
+    <lastBuildDate>Fri, 12 Jun 2026 14:40:34 +0800</lastBuildDate>
+    <atom:link href="https://seolcho0827.github.io/feed.xml" rel="self" type="application/rss+xml"></atom:link>
+    <item>
+      <title>我的世界存档渲染工具</title>
+      <link>https://seolcho0827.github.io/post/MCOverviewerGui/</link>
+      <guid isPermaLink="true">https://seolcho0827.github.io/post/MCOverviewerGui/</guid>
+      <pubDate>Fri, 12 Jun 2026 21:57:39 +0800</pubDate>
+      <description><![CDATA[<h1 id="--mcoverviewergui">我的世界存档渲染工具 — MCOverviewerGUI</h1>
+<blockquote>
+<p>一个为 Minecraft Overviewer 打造的 Windows 图形界面，让地图渲染不再需要敲命令行。</p>
+</blockquote>
+<h2 id="heading">缘起</h2>
+<p>从 2018 年开始接触 Minecraft，断断续续玩了 8 年，期间也做过一段时间服主。一直有个痛点：<strong>没办法快速渲染服务器存档地图</strong>。</p>
+<p>服务端虽然有地图插件，但查看不方便；客&hellip;</p>
+]]></description>
+      <category>Minecraft</category>
+      <category>Overviewer</category>
+      <category>Python</category>
+      <category>存档</category>
+      <category>渲染</category>
+    </item>
+    <item>
+      <title>关于</title>
+      <link>https://seolcho0827.github.io/post/about/</link>
+      <guid isPermaLink="true">https://seolcho0827.github.io/post/about/</guid>
+      <pubDate>Fri, 12 Jun 2026 13:33:48 +0800</pubDate>
+      <description><![CDATA[<h1 id="heading">欢迎来到我的小角落</h1>
+<blockquote>
+<p>等，因为你要来，所以，我不走&hellip;</p>
+</blockquote>
+<p>你好呀，陌生人。既然你点进来了，那就坐下来喝杯茶吧。</p>
+<p>这里是我乱七八糟的小窝，写的东西也是乱七八糟的——有时候是折腾代码踩的坑，有时候是生活里突然冒出来的碎碎念，偶尔还会冒出几篇游戏相关的胡言乱语。没什么固定主题，就像我的书桌一样，东西堆得满，但每件都有它的故事。</p>
+<h2 id="heading-1">这里能找到什么</h2>
+<ul>
+<li>*<em>技术杂谈</em>&hellip;</li>
+</ul>
+]]></description>
+    </item>
+  </channel>
+</rss>
