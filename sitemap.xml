@@ -2,9 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://seolcho0827.github.io/</loc>
-    <lastmod>2026-06-12T13:44:48+08:00</lastmod>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://seolcho0827.github.io/post/MCOverviewerGui/</loc>
+    <lastmod>2026-06-12T14:13:06+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://seolcho0827.github.io/post/about/</loc>
@@ -14,31 +20,61 @@
   </url>
   <url>
     <loc>https://seolcho0827.github.io/post/</loc>
-    <lastmod>2026-06-12T13:44:48+08:00</lastmod>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://seolcho0827.github.io/memos/</loc>
-    <lastmod>2026-06-12T13:44:48+08:00</lastmod>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://seolcho0827.github.io/tags/</loc>
-    <lastmod>2026-06-12T13:44:48+08:00</lastmod>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://seolcho0827.github.io/archives/</loc>
-    <lastmod>2026-06-12T13:44:48+08:00</lastmod>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://seolcho0827.github.io/tag/minecraft/</loc>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://seolcho0827.github.io/tag/overviewer/</loc>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://seolcho0827.github.io/tag/python/</loc>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://seolcho0827.github.io/tag/cun-dang/</loc>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://seolcho0827.github.io/tag/xuan-ran/</loc>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://seolcho0827.github.io/links/</loc>
-    <lastmod>2026-06-12T13:44:48+08:00</lastmod>
+    <lastmod>2026-06-12T14:13:09+08:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
