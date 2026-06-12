@@ -3,6 +3,7 @@
   "name": "小丫么小兔子的萝卜地儿",
   "short_name": "萝卜地儿",
   "description": "SeolCho的博客",
+  "lang": "zh-cn",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
