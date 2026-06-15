@@ -613,7 +613,7 @@ window.addEventListener('load', function(e) {
     if (!canvas) return;
     try {
         makeCanvasFullScreen(canvas);
-        gl = canvas.getContext('experimental-webgl');
+        gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     } catch(e) {
         console.error(e);
         return;

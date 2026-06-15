@@ -291,6 +291,29 @@ body {
   text-decoration: none;
 }
 
+.bg-widget-social-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.bg-widget-social-link {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.bg-widget-social-link:hover {
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+}
+
 /* ===== Layer 2: Skeleton frame (fixed rounded rect) ===== */
 .skeleton-frame {
   position: fixed;
@@ -633,6 +656,14 @@ body::after {
   font-weight: 500;
   letter-spacing: 0.04em;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.welcome-greeting {
+  margin-top: 24px;
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.06em;
+  text-align: center;
 }
 
 .welcome-btn {

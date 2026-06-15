@@ -15,6 +15,8 @@
 </style>
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css">
+
 
 <meta name="description" content="大爷来玩儿啊">
 <meta name="keywords" content="SeolCho,小丫么小兔子">
@@ -56,6 +58,7 @@
       <div class="welcome-loader-bar" id="welcome-loader-bar"></div>
       <span class="welcome-loader-text" id="welcome-loader-text">正在加载...</span>
     </div>
+    <p class="welcome-greeting" id="welcome-greeting">欢迎来到我的回忆</p>
   </div>
   <button class="welcome-btn" id="welcome-btn">进 入</button>
 </div>
@@ -345,6 +348,8 @@ void main(void) {
 </div>
 
 
+
+
 <div class="bg-widget" id="bg-widget-music">
   <div class="bg-widget-icon">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -423,7 +428,7 @@ void main(void) {
       <img src="/images/avatar.png" alt="小丫么小兔子的萝卜地儿" class="feed-card-avatar" loading="lazy">
     
     <span class="feed-card-author">小丫么小兔子的萝卜地儿</span>
-    <time class="feed-card-time">2026-06-12</time>
+    <time class="feed-card-time" datetime="2026-06-12">2026-06-12</time>
   </div>
   <div class="feed-card-body">
     
@@ -466,7 +471,7 @@ void main(void) {
       <img src="/images/avatar.png" alt="小丫么小兔子的萝卜地儿" class="feed-card-avatar" loading="lazy">
     
     <span class="feed-card-author">小丫么小兔子的萝卜地儿</span>
-    <time class="feed-card-time">2026-06-12</time>
+    <time class="feed-card-time" datetime="2026-06-12">2026-06-12</time>
   </div>
   <div class="feed-card-body">
     
@@ -547,6 +552,7 @@ void main(void) {
 
   var player = null;
   var configOpen = false;
+  var welcomeClicked = false;
 
   function initPlayer(audios) {
     var container = document.getElementById('aplayer');
@@ -574,6 +580,8 @@ void main(void) {
 
     var icon = document.querySelector('#bg-widget-music .bg-widget-icon');
     if (icon) icon.classList.add('is-playing');
+
+    if (welcomeClicked && player.audio && player.audio.paused) player.play();
   }
 
   function detectGitHubRepo() {
@@ -667,6 +675,7 @@ void main(void) {
   var welcomeBtn = document.getElementById('welcome-btn');
   if (welcomeBtn) {
     welcomeBtn.addEventListener('click', function() {
+      welcomeClicked = true;
       if (player && player.audio && player.audio.paused) player.play();
     });
   }
@@ -732,34 +741,7 @@ void main(void) {
     };
     xhr.send();
   }
-  function pjaxFetch(url) {
-    contentArea.style.opacity = '0.4';
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = function() {
-      contentArea.style.opacity = '1';
-      if (xhr.status < 200 || xhr.status >= 400) {
-        showError('这个页面已经走丢了……');
-        return;
-      }
-      var tmp = document.createElement('div');
-      tmp.innerHTML = xhr.responseText;
-      var newContent = tmp.querySelector('.content-inner');
-      var newTitle = tmp.querySelector('title');
-      var existing = contentArea.querySelector('.content-inner');
-      if (existing && newContent) {
-        existing.innerHTML = newContent.innerHTML;
-      } else if (existing) {
-        showError('这个页面暂时没有内容');
-      }
-      if (newTitle) document.title = newTitle.textContent;
-    };
-    xhr.onerror = function() {
-      contentArea.style.opacity = '1';
-      showError('加载失败，请检查网络连接');
-    };
-    xhr.send();
-  }
+  function pjaxFetch(url) { loadPage(url, false); }
   updateNavActive(location.pathname);
   document.addEventListener('click', function(e) {
     var link = e.target.closest('a');
@@ -773,7 +755,7 @@ void main(void) {
         href = url.pathname + url.search;
       } catch(e) { return; }
     }
-    if (link.closest('.bg-widget, .music-player-btn, .welcome-btn, #welcome-btn, .pagination-link')) return;
+    if (link.closest('.bg-widget, .welcome-btn, #welcome-btn, .pagination-link')) return;
     e.preventDefault();
     loadPage(href);
   });
