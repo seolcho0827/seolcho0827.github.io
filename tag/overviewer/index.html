@@ -1,35 +1,21 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html data-theme="dark" lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Gridea Pro">
-
 <meta name="description" content="大爷来玩儿啊">
-
-<meta name="theme-color" content="#0a0e17">
-<link rel="icon" href="/images/avatar.png">
-<link rel="stylesheet" href="/assets/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="小丫么小兔子的萝卜地儿" href="/atom.xml">
+<meta name="generator" content="Gridea Pro 1.2.2">
+<title>Overviewer | 小丫么小兔子的萝卜地儿</title>
+<meta name="generator" content="Gridea Pro">
+<link rel="stylesheet" href="/styles/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root { --accent: #c084fc; }
+</style>
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="小丫么小兔子的萝卜地儿">
-<meta property="og:site_name" content="小丫么小兔子的萝卜地儿">
-<meta property="og:url" content="https://seolcho0827.github.io">
-<meta property="og:description" content="大爷来玩儿啊">
-<meta property="og:locale" content="zh_CN">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="小丫么小兔子的萝卜地儿">
-<meta name="twitter:description" content="大爷来玩儿啊">
 
-<link rel="manifest" href="/manifest.json">
 
-  <meta name="generator" content="Gridea Pro 1.2.2">
-  <title>Overviewer - 小丫么小兔子的萝卜地儿</title>
-  
 <meta name="description" content="大爷来玩儿啊">
 <meta name="keywords" content="SeolCho,小丫么小兔子">
 <link rel="canonical" href="https://seolcho0827.github.io/tag/overviewer/">
@@ -57,157 +43,603 @@
 <meta name="msapplication-TileImage" content="/images/icons/icon-192x192.png">
 <script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js')}</script>
 </head>
-<body class="vfd-terminal" data-primary-color="#00ffcc" data-bg-color="#0a0a0a" data-card-bg="#111111" data-border-color="#1a3a3a" data-glow-intensity="8" data-scanline-opacity="3" data-sidebar-width="280" data-content-width="780">
-  <header class="site-header">
-  <div class="site-header__inner">
-    <div class="site-header__brand">
-      
-      <a href="/" class="site-header__avatar-link">
-        <img class="site-header__avatar" src="/images/avatar.png" alt="小丫么小兔子的萝卜地儿">
-      </a>
-      
-      <div class="site-header__text">
-        <h1 class="site-header__title"><a href="/">小丫么小兔子的萝卜地儿</a></h1>
-        
-        <p class="site-header__description">大爷来玩儿啊</p>
-        
-      </div>
-    </div>
-    <nav class="site-header__nav">
-      
-      <a class="site-header__nav-link" href="/">首页</a>
-      
-      <a class="site-header__nav-link" href="https://seolcho0827.github.io/post/MCOverviewerGui">博客</a>
-      
-      <a class="site-header__nav-link" href="/memos">闪念</a>
-      
-      <a class="site-header__nav-link" href="https://seolcho0827.github.io/archives">归档</a>
-      
-      <a class="site-header__nav-link" href="https://seolcho0827.github.io/tag">标签</a>
-      
-      <a class="site-header__nav-link" href="/links">友链</a>
-      
-      <a class="site-header__nav-link" href="https://seolcho0827.github.io/post/about">关于</a>
-      
-    </nav>
-    <button class="mobile-menu-btn" aria-label="Toggle menu">
-      <span class="mobile-menu-btn__line"></span>
-      <span class="mobile-menu-btn__line"></span>
-      <span class="mobile-menu-btn__line"></span>
-    </button>
-  </div>
-  <nav class="mobile-menu">
+<body>
+  
     
-    <a class="mobile-menu__link" href="/">首页</a>
-    
-    <a class="mobile-menu__link" href="https://seolcho0827.github.io/post/MCOverviewerGui">博客</a>
-    
-    <a class="mobile-menu__link" href="/memos">闪念</a>
-    
-    <a class="mobile-menu__link" href="https://seolcho0827.github.io/archives">归档</a>
-    
-    <a class="mobile-menu__link" href="https://seolcho0827.github.io/tag">标签</a>
-    
-    <a class="mobile-menu__link" href="/links">友链</a>
-    
-    <a class="mobile-menu__link" href="https://seolcho0827.github.io/post/about">关于</a>
-    
-  </nav>
-</header>
+<div id="sakura-container">
+  <canvas id="sakura"></canvas>
+</div>
 
-  <div class="site-layout">
-    <main class="main-content">
-      
-<div class="tag-detail">
-  <h2 class="tag-detail__name">Overviewer</h2>
-  <div class="post-list">
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-loader">
+    <div class="welcome-loader-track">
+      <div class="welcome-loader-bar" id="welcome-loader-bar"></div>
+      <span class="welcome-loader-text" id="welcome-loader-text">正在加载...</span>
+    </div>
+  </div>
+  <button class="welcome-btn" id="welcome-btn">进 入</button>
+</div>
+
+<script id="sakura_point_vsh" type="x-shader/x_vertex">
+uniform mat4 uProjection;
+uniform mat4 uModelview;
+uniform vec3 uResolution;
+uniform vec3 uOffset;
+uniform vec3 uDOF;
+uniform vec3 uFade;
+
+attribute vec3 aPosition;
+attribute vec3 aEuler;
+attribute vec2 aMisc;
+
+varying vec3 pposition;
+varying float psize;
+varying float palpha;
+varying float pdist;
+
+varying vec3 normX;
+varying vec3 normY;
+varying vec3 normZ;
+varying vec3 normal;
+
+varying float diffuse;
+varying float specular;
+varying float rstop;
+varying float distancefade;
+
+void main(void) {
+    vec4 pos = uModelview * vec4(aPosition + uOffset, 1.0);
+    gl_Position = uProjection * pos;
+    gl_PointSize = aMisc.x * uProjection[1][1] / -pos.z * uResolution.y * 0.5;
+
+    pposition = pos.xyz;
+    psize = aMisc.x;
+    pdist = length(pos.xyz);
+    palpha = smoothstep(0.0, 1.0, (pdist - 0.1) / uFade.z);
+
+    vec3 elrsn = sin(aEuler);
+    vec3 elrcs = cos(aEuler);
+    mat3 rotx = mat3(
+        1.0, 0.0, 0.0,
+        0.0, elrcs.x, elrsn.x,
+        0.0, -elrsn.x, elrcs.x
+    );
+    mat3 roty = mat3(
+        elrcs.y, 0.0, -elrsn.y,
+        0.0, 1.0, 0.0,
+        elrsn.y, 0.0, elrcs.y
+    );
+    mat3 rotz = mat3(
+        elrcs.z, elrsn.z, 0.0,
+        -elrsn.z, elrcs.z, 0.0,
+        0.0, 0.0, 1.0
+    );
+    mat3 rotmat = rotx * roty * rotz;
+    normal = rotmat[2];
+
+    mat3 trrotm = mat3(
+        rotmat[0][0], rotmat[1][0], rotmat[2][0],
+        rotmat[0][1], rotmat[1][1], rotmat[2][1],
+        rotmat[0][2], rotmat[1][2], rotmat[2][2]
+    );
+    normX = trrotm[0];
+    normY = trrotm[1];
+    normZ = trrotm[2];
+
+    const vec3 lit = vec3(0.6917144638660746, 0.6917144638660746, -0.20751433915982237);
+
+    float tmpdfs = dot(lit, normal);
+    if(tmpdfs < 0.0) {
+        normal = -normal;
+        tmpdfs = dot(lit, normal);
+    }
+    diffuse = 0.4 + tmpdfs;
+
+    vec3 eyev = normalize(-pos.xyz);
+    if(dot(eyev, normal) > 0.0) {
+        vec3 hv = normalize(eyev + lit);
+        specular = pow(max(dot(hv, normal), 0.0), 20.0);
+    }
+    else {
+        specular = 0.0;
+    }
+
+    rstop = clamp((abs(pdist - uDOF.x) - uDOF.y) / uDOF.z, 0.0, 1.0);
+    rstop = pow(rstop, 0.5);
+    distancefade = min(1.0, exp((uFade.x - pdist) * 0.69315 / uFade.y));
+}
+</script>
+<script id="sakura_point_fsh" type="x-shader/x_fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+
+uniform vec3 uDOF;
+uniform vec3 uFade;
+
+const vec3 fadeCol = vec3(0.15, 0.08, 0.12);
+
+varying vec3 pposition;
+varying float psize;
+varying float palpha;
+varying float pdist;
+
+varying vec3 normX;
+varying vec3 normY;
+varying vec3 normZ;
+varying vec3 normal;
+
+varying float diffuse;
+varying float specular;
+varying float rstop;
+varying float distancefade;
+
+void main(void) {
+    vec3 p = vec3(gl_PointCoord - vec2(0.5, 0.5), 0.0) * 2.0;
+    vec3 d = vec3(0.0, 0.0, -1.0);
+    float nd = normZ.z;
+    if(abs(nd) < 0.0001) discard;
+
+    float np = dot(normZ, p);
+    vec3 tp = p + d * np / nd;
+    vec2 coord = vec2(dot(normX, tp), dot(normY, tp));
+
+    float r = 1.0;
+    for (int i = 0; i < 5; i++) {
+        float a = float(i) * 1.256637;
+        vec2 dir = vec2(cos(a), sin(a));
+        float y = dot(coord, dir);
+        float x = dot(coord, vec2(-dir.y, dir.x));
+        float lobe1 = length(vec2(x - 0.08, y - 0.1)) - 0.15;
+        float lobe2 = length(vec2(x + 0.08, y - 0.1)) - 0.15;
+        float tip = length(vec2(x, y + 0.08)) - 0.16;
+        float pd = min(min(lobe1, lobe2), tip);
+        float cleft = y - abs(x) * 0.8;
+        pd = max(pd, cleft + 0.04);
+        r = min(r, pd);
+    }
+
+    if(r > rstop) discard;
+
+    vec3 col = vec3(0.95, 0.72, 0.68);
+    col = col * diffuse + specular * 0.15;
+    col = min(col, vec3(1.0));
+
+    col = mix(fadeCol, col, distancefade);
+
+    float alpha = (rstop > 0.001)? (0.5 - r / (rstop * 2.0)) : 1.0;
+    alpha = smoothstep(0.0, 1.0, alpha) * palpha;
+
+    gl_FragColor = vec4(col * 0.85, alpha);
+}
+</script>
+<script id="fx_common_vsh" type="x-shader/x_vertex">
+uniform vec3 uResolution;
+attribute vec2 aPosition;
+
+varying vec2 texCoord;
+varying vec2 screenCoord;
+
+void main(void) {
+    gl_Position = vec4(aPosition, 0.0, 1.0);
+    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
+    texCoord.y = 1.0 - texCoord.y;
+    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
+}
+</script>
+<script id="bg_fsh" type="x-shader/x_fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+
+uniform vec2 uTimes;
+
+varying vec2 texCoord;
+varying vec2 screenCoord;
+
+void main(void) {
+    vec3 col;
+    float c;
+    vec2 tmpv = texCoord * vec2(0.8, 1.0) - vec2(0.95, 1.0);
+    c = exp(-pow(length(tmpv) * 1.8, 2.0));
+    col = mix(vec3(0.02, 0.0, 0.03), vec3(0.96, 0.98, 1.0) * 1.5, c);
+    gl_FragColor = vec4(col * 0.5, 1.0);
+}
+</script>
+<script id="fx_brightbuf_fsh" type="x-shader/x_fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+uniform sampler2D uSrc;
+uniform vec2 uDelta;
+
+varying vec2 texCoord;
+varying vec2 screenCoord;
+
+void main(void) {
+    vec4 col = texture2D(uSrc, texCoord);
+    gl_FragColor = vec4(col.rgb * 2.0 - vec3(0.5), 1.0);
+}
+</script>
+<script id="fx_dirblur_r4_fsh" type="x-shader/x_fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+uniform sampler2D uSrc;
+uniform vec2 uDelta;
+uniform vec4 uBlurDir;
+
+varying vec2 texCoord;
+varying vec2 screenCoord;
+
+void main(void) {
+    vec4 col = texture2D(uSrc, texCoord);
+    col = col + texture2D(uSrc, texCoord + uBlurDir.xy * uDelta);
+    col = col + texture2D(uSrc, texCoord - uBlurDir.xy * uDelta);
+    col = col + texture2D(uSrc, texCoord + (uBlurDir.xy + uBlurDir.zw) * uDelta);
+    col = col + texture2D(uSrc, texCoord - (uBlurDir.xy + uBlurDir.zw) * uDelta);
+    gl_FragColor = col / 5.0;
+}
+</script>
+<script id="fx_common_fsh" type="x-shader/x_fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+uniform sampler2D uSrc;
+uniform vec2 uDelta;
+
+varying vec2 texCoord;
+varying vec2 screenCoord;
+
+void main(void) {
+    gl_FragColor = texture2D(uSrc, texCoord);
+}
+</script>
+<script id="pp_final_vsh" type="x-shader/x_vertex">
+uniform vec3 uResolution;
+attribute vec2 aPosition;
+varying vec2 texCoord;
+varying vec2 screenCoord;
+void main(void) {
+    gl_Position = vec4(aPosition, 0.0, 1.0);
+    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
+    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
+}
+</script>
+<script id="pp_final_fsh" type="x-shader/x_fragment">
+#ifdef GL_ES
+precision highp float;
+#endif
+uniform sampler2D uSrc;
+uniform sampler2D uBloom;
+uniform vec2 uDelta;
+varying vec2 texCoord;
+varying vec2 screenCoord;
+void main(void) {
+    vec4 srccol = texture2D(uSrc, texCoord) * 2.0;
+    vec4 bloomcol = texture2D(uBloom, texCoord);
+    vec4 col;
+    col = srccol + bloomcol * (vec4(1.0) + srccol);
+    col *= smoothstep(1.0, 0.0, pow(length((texCoord - vec2(0.5)) * 2.0), 1.2) * 0.5);
+    col = pow(col, vec4(0.45454545454545));
+    gl_FragColor = vec4(col.rgb, 1.0);
+    gl_FragColor.a = 1.0;
+}
+</script>
+
+
+  
+
+  <!-- Layer 2: background widgets (left-bottom) -->
+  
+  <div class="bg-widgets" id="bg-widgets">
     
-    <article class="post-card">
-      
-      <div class="post-card__body">
-        <h3 class="post-card__title">
-          <a href="/post/MCOverviewerGui/">我的世界存档渲染工具</a>
-        </h3>
-        <time class="post-card__date" datetime="2026-06-12T21:57:39+08:00">2026-06-12</time>
-        
-        <div class="post-card__tags">
-          
-          <a class="tag-pill" href="/tag/minecraft/">Minecraft</a>
-          
-          <a class="tag-pill" href="/tag/overviewer/">Overviewer</a>
-          
-          <a class="tag-pill" href="/tag/python/">Python</a>
-          
-          <a class="tag-pill" href="/tag/cun-dang/">存档</a>
-          
-          <a class="tag-pill" href="/tag/xuan-ran/">渲染</a>
-          
-        </div>
-        
-      </div>
-    </article>
-    
+      <div class="bg-widget" id="bg-widget-about">
+  <div class="bg-widget-icon">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+  </div>
+  <div class="bg-widget-body">
+    <div class="bg-widget-label">小丫么小兔子的萝卜地儿</div>
+    <div class="bg-widget-desc">大爷来玩儿啊</div>
   </div>
 </div>
 
-    </main>
-    <aside class="sidebar">
-  <div class="sidebar__section sidebar__author">
-    
-    <img class="sidebar__avatar" src="/images/avatar.png" alt="小丫么小兔子的萝卜地儿">
-    
-    <h3 class="sidebar__title">小丫么小兔子的萝卜地儿</h3>
-    
-    <p class="sidebar__description">大爷来玩儿啊</p>
-    
+
+
+
+<div class="bg-widget" id="bg-widget-tags">
+  <div class="bg-widget-icon">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
   </div>
-  <div class="sidebar__section sidebar__tags">
-    <h3 class="sidebar__section-title">Tags</h3>
-    <div class="sidebar__tags-cloud">
+  <div class="bg-widget-body">
+    <div class="bg-widget-tags-list">
       
-      <a class="tag-pill" href="/tag/minecraft/">Minecraft</a>
+        <a href="/tag/minecraft/" class="bg-widget-tag">Minecraft</a>
       
-      <a class="tag-pill" href="/tag/overviewer/">Overviewer</a>
+        <a href="/tag/overviewer/" class="bg-widget-tag">Overviewer</a>
       
-      <a class="tag-pill" href="/tag/python/">Python</a>
+        <a href="/tag/python/" class="bg-widget-tag">Python</a>
       
-      <a class="tag-pill" href="/tag/cun-dang/">存档</a>
+        <a href="/tag/cun-dang/" class="bg-widget-tag">存档</a>
       
-      <a class="tag-pill" href="/tag/xuan-ran/">渲染</a>
+        <a href="/tag/xuan-ran/" class="bg-widget-tag">渲染</a>
       
     </div>
   </div>
-  <div class="sidebar__section sidebar__social">
-    <h3 class="sidebar__section-title">Links</h3>
-    <ul class="sidebar__links">
-      
-      
-      
-      
-    </ul>
-  </div>
-  <div class="sidebar__section sidebar__about">
-    <h3 class="sidebar__section-title">About</h3>
-    <p class="sidebar__about-text">Powered by <a href="https://pro.gridea.dev" target="_blank" rel="noopener noreferrer">Gridea Pro</a></p>
-  </div>
-</aside>
+</div>
 
+
+
+<div class="bg-widget" id="bg-widget-visitors">
+  <div class="bg-widget-icon">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
   </div>
-  <footer class="site-footer">
-  <div class="site-footer__inner">
-    <p class="site-footer__powered">Powered by <a href="https://pro.gridea.dev" target="_blank" rel="noopener noreferrer">Gridea Pro</a></p>
-    <p class="site-footer__rss"><a href="/atom.xml" target="_blank" rel="noopener noreferrer">RSS</a></p>
-    
-    <p class="site-footer__info">Powered by Gridea Pro</p>
-    
-    <p class="site-footer__copyright">&copy; 2026-06-12 17:50:37.6432195 +0800 CST m=+35.158960201 小丫么小兔子的萝卜地儿</p>
+  <div class="bg-widget-body">
+    <div class="bg-widget-desc"><span id="busuanzi_value_site_pv">0</span> 人次访问</div>
   </div>
-</footer>
+</div>
+
+
+    
+  </div>
+  
+
+  <!-- Layer 2: fixed skeleton frame -->
+  <div class="skeleton-frame">
+    <div class="skeleton-header">
+      <a href="/" class="skeleton-logo">小丫么小兔子的萝卜地儿</a>
+      <div class="skeleton-header-actions"></div>
+    </div>
+    <div class="skeleton-body">
+      <div class="skeleton-content">
+        
+        <div class="content-inner">
+          
+  <h1 class="page-title">标签：Overviewer</h1>
+  
+    <div class="feed-list">
+    
+      <article class="feed-card">
+  <div class="feed-card-header">
+    
+      <img src="/images/avatar.png" alt="小丫么小兔子的萝卜地儿" class="feed-card-avatar" loading="lazy">
+    
+    <span class="feed-card-author">小丫么小兔子的萝卜地儿</span>
+    <time class="feed-card-time">2026-06-12</time>
+  </div>
+  <div class="feed-card-body">
+    
+    
+    <h2 class="feed-card-title">
+      <a href="/post/MCOverviewerGui/">我的世界存档渲染工具</a>
+    </h2>
+    
+    
+    <p class="feed-card-excerpt">我的世界存档渲染工具 — MCOverviewerGUI
+
+一个为 Minecraft Overviewer 打造的 Windows 图形界面，让地图渲染不再需要敲命令行。
+
+缘起
+从 2018 年开始接触 Minecraft，断断续续玩了 8 年，期间也做过一段时间服主。一直有个痛点：没办法快速渲染服务器存档地图。
+服务端虽然有地图插件，但查看不方便；客户端又只能看到自己探索过的区域。最关...</p>
+    
+  </div>
+  <div class="feed-card-meta">
+    <div class="feed-card-tags">
+      
+        <a href="/tag/minecraft/" class="feed-card-tag">Minecraft</a>
+      
+        <a href="/tag/overviewer/" class="feed-card-tag">Overviewer</a>
+      
+        <a href="/tag/python/" class="feed-card-tag">Python</a>
+      
+        <a href="/tag/cun-dang/" class="feed-card-tag">存档</a>
+      
+        <a href="/tag/xuan-ran/" class="feed-card-tag">渲染</a>
+      
+    </div>
+  </div>
+</article>
+
+    
+    </div>
+    
 
   
-  <script src="/assets/scripts/main.js"></script>
+
+        </div>
+        
+      </div>
+      <nav class="skeleton-nav">
+        
+          <a href="/" class="skeleton-nav-item">首页</a>
+        
+          <a href="https://seolcho0827.github.io/post/MCOverviewerGui" class="skeleton-nav-item">博客</a>
+        
+          <a href="/memos" class="skeleton-nav-item">闪念</a>
+        
+          <a href="https://seolcho0827.github.io/archives" class="skeleton-nav-item">归档</a>
+        
+          <a href="https://seolcho0827.github.io/tag" class="skeleton-nav-item">标签</a>
+        
+          <a href="/links" class="skeleton-nav-item">友链</a>
+        
+          <a href="https://seolcho0827.github.io/post/about" class="skeleton-nav-item">关于</a>
+        
+      </nav>
+    </div>
+    
+      <div class="skeleton-footer">
+  <p class="skeleton-footer-text">
+    
+      &copy; 2026 小丫么小兔子的萝卜地儿
+    
+  </p>
+</div>
+
+    
+  </div>
+
   
+    
+
   
-<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: vfd-b v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+
+
+<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script src="/scripts/sakura.js"></script>
+
+
+<script>
+(function(){
+  // PJAX: intercept nav clicks, swap only content
+  var contentArea = document.querySelector('.skeleton-content');
+  function updateNavActive(url) {
+    document.querySelectorAll('.skeleton-nav-item').forEach(function(n) {
+      var h = n.getAttribute('href');
+      n.classList.toggle('active', h && (h === url || (h !== '/' && url.indexOf(h) === 0)));
+    });
+  }
+  function showError(msg) {
+    var existing = contentArea.querySelector('.content-inner');
+    if (existing) {
+      existing.innerHTML = '<div class="error-page"><div class="error-code">404</div><p class="error-message">' + msg + '</p><a href="/" class="error-link">回到首页</a></div>';
+    }
+  }
+  function loadPage(url, push) {
+    if (!url || url === location.pathname + location.search || url === location.href) return;
+    if (push !== false) history.pushState(null, '', url);
+    updateNavActive(url);
+    contentArea.style.opacity = '0.4';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+      contentArea.style.opacity = '1';
+      if (xhr.status < 200 || xhr.status >= 400) {
+        showError('这个页面已经走丢了……');
+        document.title = '404 | ' + document.title.split('|').pop().trim();
+        return;
+      }
+      var tmp = document.createElement('div');
+      tmp.innerHTML = xhr.responseText;
+      var newContent = tmp.querySelector('.content-inner');
+      var newTitle = tmp.querySelector('title');
+      var existing = contentArea.querySelector('.content-inner');
+      if (existing && newContent) {
+        existing.innerHTML = newContent.innerHTML;
+      } else if (existing) {
+        showError('这个页面暂时没有内容');
+      }
+      if (newTitle) document.title = newTitle.textContent;
+    };
+    xhr.onerror = function() {
+      contentArea.style.opacity = '1';
+      showError('加载失败，请检查网络连接');
+    };
+    xhr.send();
+  }
+  function pjaxFetch(url) {
+    contentArea.style.opacity = '0.4';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+      contentArea.style.opacity = '1';
+      if (xhr.status < 200 || xhr.status >= 400) {
+        showError('这个页面已经走丢了……');
+        return;
+      }
+      var tmp = document.createElement('div');
+      tmp.innerHTML = xhr.responseText;
+      var newContent = tmp.querySelector('.content-inner');
+      var newTitle = tmp.querySelector('title');
+      var existing = contentArea.querySelector('.content-inner');
+      if (existing && newContent) {
+        existing.innerHTML = newContent.innerHTML;
+      } else if (existing) {
+        showError('这个页面暂时没有内容');
+      }
+      if (newTitle) document.title = newTitle.textContent;
+    };
+    xhr.onerror = function() {
+      contentArea.style.opacity = '1';
+      showError('加载失败，请检查网络连接');
+    };
+    xhr.send();
+  }
+  updateNavActive(location.pathname);
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (!href || href.startsWith('http') || href.startsWith('//') || href.startsWith('#') || href.startsWith('mailto:')) return;
+    if (link.closest('.bg-widget, .music-player-btn, .welcome-btn, #welcome-btn, .pagination-link')) return;
+    e.preventDefault();
+    loadPage(href);
+  });
+
+  window.addEventListener('popstate', function() {
+    updateNavActive(location.pathname);
+    pjaxFetch(location.href);
+  });
+
+  var canvas = document.getElementById('sakura');
+  var overlay = document.getElementById('welcome-overlay');
+  var sakuraContainer = document.getElementById('sakura-container');
+  var welcomeBtn = document.getElementById('welcome-btn');
+  if (overlay && welcomeBtn && canvas && sakuraContainer) {
+    var visited = false;
+    try { visited = sessionStorage.getItem('memory-welcomed') === 'true'; } catch(e) {}
+    if (!visited) {
+      overlay.insertBefore(canvas, overlay.firstChild);
+      overlay.classList.add('is-active');
+      startLoader();
+    }
+    welcomeBtn.addEventListener('click', function() {
+      sakuraContainer.insertBefore(canvas, sakuraContainer.firstChild);
+      overlay.classList.remove('is-active');
+      overlay.classList.add('is-fading');
+      try { sessionStorage.setItem('memory-welcomed', 'true'); } catch(e) {}
+    });
+  }
+  function startLoader() {
+    var bar = document.getElementById('welcome-loader-bar');
+    var text = document.getElementById('welcome-loader-text');
+    var btn = document.getElementById('welcome-btn');
+    if (!bar || !text) return;
+    var msgs = [
+      '正在尝试瞎编文章','加载用户头像中',
+      '寻找丢失的像素','格式化大脑缓存',
+      '安装回忆模块','校准时间轴中',
+      '收集零碎记忆','初始化完成度 42%',
+      '充能中 请勿拔掉电源','召唤远古服务器',
+      '下载更多 RAM','粒子碰撞模拟中',
+      '配置人生参数','同步次元数据',
+      '上传灵魂至云端','编译日常逻辑',
+      '解压儿时回忆','计算人生意义'
+    ];
+    var progress = 0;
+    var msgIndex = Math.floor(Math.random() * msgs.length);
+    function step() {
+      progress += Math.random() * 6 + 2;
+      if (progress >= 100) {
+        progress = 100;
+        bar.style.width = '100%';
+        if (text) text.textContent = '加载完成';
+        if (btn) btn.classList.add('is-visible');
+        return;
+      }
+      bar.style.width = progress + '%';
+      if (text) text.textContent = msgs[msgIndex % msgs.length];
+      msgIndex++;
+      setTimeout(step, 350 + Math.random() * 200);
+    }
+    step();
+  }
+})();
+</script>
+<script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: memory v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
 </body>
 </html>
