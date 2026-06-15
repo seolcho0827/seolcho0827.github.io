@@ -545,7 +545,14 @@ void main(void) {
     var link = e.target.closest('a');
     if (!link) return;
     var href = link.getAttribute('href');
-    if (!href || href.startsWith('http') || href.startsWith('//') || href.startsWith('#') || href.startsWith('mailto:')) return;
+    if (!href || href.startsWith('#') || href.startsWith('mailto:')) return;
+    if (href.startsWith('http') || href.startsWith('//')) {
+      try {
+        var url = new URL(href);
+        if (url.hostname !== location.hostname) return;
+        href = url.pathname + url.search;
+      } catch(e) { return; }
+    }
     if (link.closest('.bg-widget, .music-player-btn, .welcome-btn, #welcome-btn, .pagination-link')) return;
     e.preventDefault();
     loadPage(href);
