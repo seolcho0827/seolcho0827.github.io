@@ -98,6 +98,67 @@ body {
   gap: 4px;
 }
 
+.bg-widget-config-btn {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0;
+  margin-top: 2px;
+  transition: border-color 0.2s, color 0.2s;
+  align-self: flex-start;
+}
+.bg-widget-config-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.music-url-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.65rem;
+  padding: 4px 6px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.music-url-input:focus {
+  border-color: var(--accent);
+}
+.music-url-input::placeholder {
+  color: var(--text-muted);
+}
+
+.music-save-btn {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s;
+}
+.music-save-btn:hover {
+  opacity: 0.8;
+}
+
 #aplayer {
   font-size: 12px;
 }

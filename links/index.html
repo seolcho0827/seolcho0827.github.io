@@ -345,6 +345,24 @@ void main(void) {
 </div>
 
 
+<div class="bg-widget" id="bg-widget-music">
+  <div class="bg-widget-icon">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  </div>
+  <div class="bg-widget-body" style="width:100%;overflow:hidden;">
+    <div id="aplayer" style="margin:-4px 0;"></div>
+    <div id="music-config-panel" style="display:none;">
+      <div class="bg-widget-row" style="margin-top:2px;">
+        <input type="text" id="music-url-input" class="music-url-input" placeholder="粘贴音频直链 URL">
+        <button id="music-save-btn" class="music-save-btn">✓</button>
+      </div>
+    </div>
+  </div>
+  <button id="music-config-btn" class="bg-widget-config-btn" title="配置音乐地址">
+    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+  </button>
+</div>
+
 
 
 <div class="bg-widget" id="bg-widget-tags">
@@ -449,6 +467,144 @@ void main(void) {
 
   
     
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>
+<script>
+(function(){
+  var STORAGE_KEY = 'memory-music-url';
+  var musicPath = '/music';
+  var defaultCover = '';
+  var defaultName = '昨日重现';
+  var fallbackUrl = '' || '';
+  var accentColor = '#c084fc';
+
+  var player = null;
+  var configOpen = false;
+
+  function initPlayer(audios) {
+    var container = document.getElementById('aplayer');
+    if (!container || !audios || audios.length === 0) return;
+
+    if (player) {
+      try { player.destroy(); } catch(e) {}
+      player = null;
+    }
+    container.innerHTML = '';
+
+    player = new APlayer({
+      container: container,
+      mini: true,
+      autoplay: false,
+      theme: accentColor,
+      loop: 'all',
+      order: 'list',
+      preload: 'auto',
+      volume: 0.7,
+      mutex: true,
+      lrcType: 0,
+      audio: audios
+    });
+
+    var icon = document.querySelector('#bg-widget-music .bg-widget-icon');
+    if (icon) icon.classList.add('is-playing');
+  }
+
+  function detectGitHubRepo() {
+    var host = location.hostname;
+    if (host.endsWith('.github.io')) {
+      var owner = host.replace('.github.io', '');
+      return { repo: owner + '/' + owner + '.github.io', branch: 'main' };
+    }
+    return null;
+  }
+
+  function scanMusicFolder(path) {
+    var info = detectGitHubRepo();
+    if (!info) return Promise.reject('not GitHub Pages');
+    var api = 'https://api.github.com/repos/' + info.repo + '/contents' + path + '?ref=' + info.branch;
+    return fetch(api).then(function(r) {
+      if (!r.ok) throw new Error('API error');
+      return r.json();
+    }).then(function(files) {
+      if (!Array.isArray(files)) return [];
+      return files.filter(function(f) {
+        return f.type === 'file' && /\.(mp3|ogg|wav|m4a|flac)$/i.test(f.name);
+      }).sort(function(a, b) { return a.name.localeCompare(b.name); }).map(function(f) {
+        return {
+          name: f.name.replace(/\.[^.]+$/, ''),
+          artist: '',
+          url: f.download_url,
+          cover: defaultCover
+        };
+      });
+    });
+  }
+
+  var localUrl = localStorage.getItem(STORAGE_KEY);
+  if (localUrl) {
+    initPlayer([{ name: defaultName, artist: '', url: localUrl, cover: defaultCover }]);
+  } else {
+    scanMusicFolder(musicPath).then(function(audios) {
+      if (audios.length > 0) {
+        initPlayer(audios);
+      } else if (fallbackUrl) {
+        initPlayer([{ name: defaultName, artist: '', url: fallbackUrl, cover: defaultCover }]);
+      }
+    }).catch(function() {
+      if (fallbackUrl) {
+        initPlayer([{ name: defaultName, artist: '', url: fallbackUrl, cover: defaultCover }]);
+      }
+    });
+  }
+
+  function openConfig() {
+    if (configOpen) return;
+    configOpen = true;
+    var input = document.getElementById('music-url-input');
+    var panel = document.getElementById('music-config-panel');
+    var aplayerEl = document.getElementById('aplayer');
+    if (input) input.value = localStorage.getItem(STORAGE_KEY) || '';
+    if (panel) panel.style.display = 'block';
+    if (aplayerEl) aplayerEl.style.display = 'none';
+    if (input) input.focus();
+  }
+
+  function closeConfig() {
+    configOpen = false;
+    var panel = document.getElementById('music-config-panel');
+    var aplayerEl = document.getElementById('aplayer');
+    if (panel) panel.style.display = 'none';
+    if (aplayerEl) aplayerEl.style.display = '';
+  }
+
+  function saveConfig() {
+    var input = document.getElementById('music-url-input');
+    var url = input ? input.value.trim() : '';
+    if (!url) return;
+    localStorage.setItem(STORAGE_KEY, url);
+    closeConfig();
+    initPlayer([{ name: defaultName, artist: '', url: url, cover: defaultCover }]);
+  }
+
+  var configBtn = document.getElementById('music-config-btn');
+  if (configBtn) configBtn.addEventListener('click', openConfig);
+
+  var saveBtn = document.getElementById('music-save-btn');
+  if (saveBtn) saveBtn.addEventListener('click', saveConfig);
+
+  var inputEl = document.getElementById('music-url-input');
+  if (inputEl) inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') saveConfig();
+  });
+
+  var welcomeBtn = document.getElementById('welcome-btn');
+  if (welcomeBtn) {
+    welcomeBtn.addEventListener('click', function() {
+      if (player && player.audio && player.audio.paused) player.play();
+    });
+  }
+})();
+</script>
+
 
   
 
