@@ -2,23 +2,17 @@
 <html data-theme="dark" lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; img-src 'self' data: https:; media-src 'self' https:;">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="大爷来玩儿啊">
 <meta name="generator" content="Gridea Pro 1.2.2">
 <title>闪念 | 小丫么小兔子的萝卜地儿</title>
-<meta name="generator" content="Gridea Pro">
 <link rel="stylesheet" href="/styles/style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<style>
-:root { --accent: #c084fc; }
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css" integrity="sha512-AmJnX9RkMdSF0lInl3QWB/USjLmcY6h3sXSoYEYGDJApJhUxXQo+RHVzNQVN8KtIqSAhr2g/0Q4i3Hq0TIuZ2g==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css">
-
-
-<meta name="description" content="大爷来玩儿啊">
 <meta name="keywords" content="SeolCho,小丫么小兔子">
 <link rel="canonical" href="https://seolcho0827.github.io/memos/">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"小丫么小兔子的萝卜地儿","url":"https://seolcho0827.github.io","description":"大爷来玩儿啊","potentialAction":{"@type":"SearchAction","query-input":"required name=search_term_string","target":"https://seolcho0827.github.io/search?q={search_term_string}"}}</script>
@@ -27,12 +21,12 @@
 <meta property="og:url" content="https://seolcho0827.github.io/memos/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="小丫么小兔子的萝卜地儿">
-<meta property="og:image" content="/images/avatar.png">
+<meta property="og:image" content="/media/preview.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:url" content="https://seolcho0827.github.io/memos/">
 <meta name="twitter:title" content="小丫么小兔子的萝卜地儿">
 <meta name="twitter:description" content="大爷来玩儿啊">
-<meta name="twitter:image" content="/images/avatar.png">
+<meta name="twitter:image" content="/media/preview.png">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#766c67">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -63,277 +57,7 @@
   <button class="welcome-btn" id="welcome-btn">进 入</button>
 </div>
 
-<script id="sakura_point_vsh" type="x-shader/x_vertex">
-uniform mat4 uProjection;
-uniform mat4 uModelview;
-uniform vec3 uResolution;
-uniform vec3 uOffset;
-uniform vec3 uDOF;
-uniform vec3 uFade;
-
-attribute vec3 aPosition;
-attribute vec3 aEuler;
-attribute vec2 aMisc;
-
-varying vec3 pposition;
-varying float psize;
-varying float palpha;
-varying float pdist;
-
-varying vec3 normX;
-varying vec3 normY;
-varying vec3 normZ;
-varying vec3 normal;
-
-varying float diffuse;
-varying float specular;
-varying float rstop;
-varying float distancefade;
-
-void main(void) {
-    vec4 pos = uModelview * vec4(aPosition + uOffset, 1.0);
-    gl_Position = uProjection * pos;
-    gl_PointSize = aMisc.x * uProjection[1][1] / -pos.z * uResolution.y * 0.5;
-
-    pposition = pos.xyz;
-    psize = aMisc.x;
-    pdist = length(pos.xyz);
-    palpha = smoothstep(0.0, 1.0, (pdist - 0.1) / uFade.z);
-
-    vec3 elrsn = sin(aEuler);
-    vec3 elrcs = cos(aEuler);
-    mat3 rotx = mat3(
-        1.0, 0.0, 0.0,
-        0.0, elrcs.x, elrsn.x,
-        0.0, -elrsn.x, elrcs.x
-    );
-    mat3 roty = mat3(
-        elrcs.y, 0.0, -elrsn.y,
-        0.0, 1.0, 0.0,
-        elrsn.y, 0.0, elrcs.y
-    );
-    mat3 rotz = mat3(
-        elrcs.z, elrsn.z, 0.0,
-        -elrsn.z, elrcs.z, 0.0,
-        0.0, 0.0, 1.0
-    );
-    mat3 rotmat = rotx * roty * rotz;
-    normal = rotmat[2];
-
-    mat3 trrotm = mat3(
-        rotmat[0][0], rotmat[1][0], rotmat[2][0],
-        rotmat[0][1], rotmat[1][1], rotmat[2][1],
-        rotmat[0][2], rotmat[1][2], rotmat[2][2]
-    );
-    normX = trrotm[0];
-    normY = trrotm[1];
-    normZ = trrotm[2];
-
-    const vec3 lit = vec3(0.6917144638660746, 0.6917144638660746, -0.20751433915982237);
-
-    float tmpdfs = dot(lit, normal);
-    if(tmpdfs < 0.0) {
-        normal = -normal;
-        tmpdfs = dot(lit, normal);
-    }
-    diffuse = 0.4 + tmpdfs;
-
-    vec3 eyev = normalize(-pos.xyz);
-    if(dot(eyev, normal) > 0.0) {
-        vec3 hv = normalize(eyev + lit);
-        specular = pow(max(dot(hv, normal), 0.0), 20.0);
-    }
-    else {
-        specular = 0.0;
-    }
-
-    rstop = clamp((abs(pdist - uDOF.x) - uDOF.y) / uDOF.z, 0.0, 1.0);
-    rstop = pow(rstop, 0.5);
-    distancefade = min(1.0, exp((uFade.x - pdist) * 0.69315 / uFade.y));
-}
-</script>
-<script id="sakura_point_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
-
-uniform vec3 uDOF;
-uniform vec3 uFade;
-
-const vec3 fadeCol = vec3(0.15, 0.08, 0.12);
-
-varying vec3 pposition;
-varying float psize;
-varying float palpha;
-varying float pdist;
-
-varying vec3 normX;
-varying vec3 normY;
-varying vec3 normZ;
-varying vec3 normal;
-
-varying float diffuse;
-varying float specular;
-varying float rstop;
-varying float distancefade;
-
-void main(void) {
-    vec3 p = vec3(gl_PointCoord - vec2(0.5, 0.5), 0.0) * 2.0;
-    vec3 d = vec3(0.0, 0.0, -1.0);
-    float nd = normZ.z;
-    if(abs(nd) < 0.0001) discard;
-
-    float np = dot(normZ, p);
-    vec3 tp = p + d * np / nd;
-    vec2 coord = vec2(dot(normX, tp), dot(normY, tp));
-
-    float r = 1.0;
-    for (int i = 0; i < 5; i++) {
-        float a = float(i) * 1.256637;
-        vec2 dir = vec2(cos(a), sin(a));
-        float y = dot(coord, dir);
-        float x = dot(coord, vec2(-dir.y, dir.x));
-        float lobe1 = length(vec2(x - 0.08, y - 0.1)) - 0.15;
-        float lobe2 = length(vec2(x + 0.08, y - 0.1)) - 0.15;
-        float tip = length(vec2(x, y + 0.08)) - 0.16;
-        float pd = min(min(lobe1, lobe2), tip);
-        float cleft = y - abs(x) * 0.8;
-        pd = max(pd, cleft + 0.04);
-        r = min(r, pd);
-    }
-
-    if(r > rstop) discard;
-
-    vec3 col = vec3(0.95, 0.72, 0.68);
-    col = col * diffuse + specular * 0.15;
-    col = min(col, vec3(1.0));
-
-    col = mix(fadeCol, col, distancefade);
-
-    float alpha = (rstop > 0.001)? (0.5 - r / (rstop * 2.0)) : 1.0;
-    alpha = smoothstep(0.0, 1.0, alpha) * palpha;
-
-    gl_FragColor = vec4(col * 0.85, alpha);
-}
-</script>
-<script id="fx_common_vsh" type="x-shader/x_vertex">
-uniform vec3 uResolution;
-attribute vec2 aPosition;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
-    texCoord.y = 1.0 - texCoord.y;
-    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
-}
-</script>
-<script id="bg_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
-
-uniform vec2 uTimes;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec3 col;
-    float c;
-    vec2 tmpv = texCoord * vec2(0.8, 1.0) - vec2(0.95, 1.0);
-    c = exp(-pow(length(tmpv) * 1.8, 2.0));
-    col = mix(vec3(0.02, 0.0, 0.03), vec3(0.96, 0.98, 1.0) * 1.5, c);
-    gl_FragColor = vec4(col * 0.5, 1.0);
-}
-</script>
-<script id="fx_brightbuf_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec4 col = texture2D(uSrc, texCoord);
-    gl_FragColor = vec4(col.rgb * 2.0 - vec3(0.5), 1.0);
-}
-</script>
-<script id="fx_dirblur_r4_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-uniform vec4 uBlurDir;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    vec4 col = texture2D(uSrc, texCoord);
-    col = col + texture2D(uSrc, texCoord + uBlurDir.xy * uDelta);
-    col = col + texture2D(uSrc, texCoord - uBlurDir.xy * uDelta);
-    col = col + texture2D(uSrc, texCoord + (uBlurDir.xy + uBlurDir.zw) * uDelta);
-    col = col + texture2D(uSrc, texCoord - (uBlurDir.xy + uBlurDir.zw) * uDelta);
-    gl_FragColor = col / 5.0;
-}
-</script>
-<script id="fx_common_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform vec2 uDelta;
-
-varying vec2 texCoord;
-varying vec2 screenCoord;
-
-void main(void) {
-    gl_FragColor = texture2D(uSrc, texCoord);
-}
-</script>
-<script id="pp_final_vsh" type="x-shader/x_vertex">
-uniform vec3 uResolution;
-attribute vec2 aPosition;
-varying vec2 texCoord;
-varying vec2 screenCoord;
-void main(void) {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-    texCoord = aPosition.xy * 0.5 + vec2(0.5, 0.5);
-    screenCoord = aPosition.xy * vec2(uResolution.z, 1.0);
-}
-</script>
-<script id="pp_final_fsh" type="x-shader/x_fragment">
-#ifdef GL_ES
-precision highp float;
-#endif
-uniform sampler2D uSrc;
-uniform sampler2D uBloom;
-uniform vec2 uDelta;
-varying vec2 texCoord;
-varying vec2 screenCoord;
-void main(void) {
-    vec4 srccol = texture2D(uSrc, texCoord) * 2.0;
-    vec4 bloomcol = texture2D(uBloom, texCoord);
-    vec4 col;
-    col = srccol + bloomcol * (vec4(1.0) + srccol);
-    col *= smoothstep(1.0, 0.0, pow(length((texCoord - vec2(0.5)) * 2.0), 1.2) * 0.5);
-    col = pow(col, vec4(0.45454545454545));
-    gl_FragColor = vec4(col.rgb, 1.0);
-    gl_FragColor.a = 1.0;
-}
-</script>
-
-
-  
-
-  <!-- Layer 2: background widgets (left-bottom) -->
+<!-- Layer 2: background widgets (left-bottom) -->
   
   <div class="bg-widgets" id="bg-widgets">
     
@@ -442,21 +166,21 @@ void main(void) {
         </div>
         
       </div>
-      <nav class="skeleton-nav">
+      <nav class="skeleton-nav" role="navigation" aria-label="Navigation">
         
           <a href="/" class="skeleton-nav-item">首页</a>
         
-          <a href="https://seolcho0827.github.io/post/MCOverviewerGui" class="skeleton-nav-item">博客</a>
+          <a href="/post/" class="skeleton-nav-item">博客</a>
         
           <a href="/memos" class="skeleton-nav-item">闪念</a>
         
-          <a href="https://seolcho0827.github.io/archives" class="skeleton-nav-item">归档</a>
+          <a href="/archives/" class="skeleton-nav-item">归档</a>
         
-          <a href="https://seolcho0827.github.io/tag" class="skeleton-nav-item">标签</a>
+          <a href="/tags/" class="skeleton-nav-item">标签</a>
         
           <a href="/links" class="skeleton-nav-item">友链</a>
         
-          <a href="https://seolcho0827.github.io/post/about" class="skeleton-nav-item">关于</a>
+          <a href="/post/about/" class="skeleton-nav-item">关于</a>
         
       </nav>
     </div>
@@ -474,286 +198,29 @@ void main(void) {
 
   
     
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js"></script>
-<script>
-(function(){
-  var STORAGE_KEY = 'memory-music-url';
-  var musicPath = '/music';
-  var defaultCover = '';
-  var defaultName = '昨日重现';
-  var fallbackUrl = '' || '';
-  var accentColor = '#c084fc';
-
-  var player = null;
-  var configOpen = false;
-  var welcomeClicked = false;
-
-  function initPlayer(audios) {
-    var container = document.getElementById('aplayer');
-    if (!container || !audios || audios.length === 0) return;
-
-    if (player) {
-      try { player.destroy(); } catch(e) {}
-      player = null;
-    }
-    container.innerHTML = '';
-
-    player = new APlayer({
-      container: container,
-      mini: true,
-      autoplay: false,
-      theme: accentColor,
-      loop: 'all',
-      order: 'list',
-      preload: 'auto',
-      volume: 0.7,
-      mutex: true,
-      lrcType: 0,
-      audio: audios
-    });
-
-    var icon = document.querySelector('#bg-widget-music .bg-widget-icon');
-    if (icon) icon.classList.add('is-playing');
-
-    if (welcomeClicked && player.audio && player.audio.paused) player.play();
-  }
-
-  function detectGitHubRepo() {
-    var host = location.hostname;
-    if (host.endsWith('.github.io')) {
-      var owner = host.replace('.github.io', '');
-      return { repo: owner + '/' + owner + '.github.io', branch: 'main' };
-    }
-    return null;
-  }
-
-  function scanMusicFolder(path) {
-    var info = detectGitHubRepo();
-    if (!info) return Promise.reject('not GitHub Pages');
-    var api = 'https://api.github.com/repos/' + info.repo + '/contents' + path + '?ref=' + info.branch;
-    return fetch(api).then(function(r) {
-      if (!r.ok) throw new Error('API error');
-      return r.json();
-    }).then(function(files) {
-      if (!Array.isArray(files)) return [];
-      return files.filter(function(f) {
-        return f.type === 'file' && /\.(mp3|ogg|wav|m4a|flac)$/i.test(f.name);
-      }).sort(function(a, b) { return a.name.localeCompare(b.name); }).map(function(f) {
-        return {
-          name: f.name.replace(/\.[^.]+$/, ''),
-          artist: '',
-          url: f.download_url,
-          cover: defaultCover
-        };
-      });
-    });
-  }
-
-  var localUrl = localStorage.getItem(STORAGE_KEY);
-  if (localUrl) {
-    initPlayer([{ name: defaultName, artist: '', url: localUrl, cover: defaultCover }]);
-  } else {
-    scanMusicFolder(musicPath).then(function(audios) {
-      if (audios.length > 0) {
-        initPlayer(audios);
-      } else if (fallbackUrl) {
-        initPlayer([{ name: defaultName, artist: '', url: fallbackUrl, cover: defaultCover }]);
-      }
-    }).catch(function() {
-      if (fallbackUrl) {
-        initPlayer([{ name: defaultName, artist: '', url: fallbackUrl, cover: defaultCover }]);
-      }
-    });
-  }
-
-  function openConfig() {
-    if (configOpen) return;
-    configOpen = true;
-    var input = document.getElementById('music-url-input');
-    var panel = document.getElementById('music-config-panel');
-    var aplayerEl = document.getElementById('aplayer');
-    if (input) input.value = localStorage.getItem(STORAGE_KEY) || '';
-    if (panel) panel.style.display = 'block';
-    if (aplayerEl) aplayerEl.style.display = 'none';
-    if (input) input.focus();
-  }
-
-  function closeConfig() {
-    configOpen = false;
-    var panel = document.getElementById('music-config-panel');
-    var aplayerEl = document.getElementById('aplayer');
-    if (panel) panel.style.display = 'none';
-    if (aplayerEl) aplayerEl.style.display = '';
-  }
-
-  function saveConfig() {
-    var input = document.getElementById('music-url-input');
-    var url = input ? input.value.trim() : '';
-    if (!url) return;
-    localStorage.setItem(STORAGE_KEY, url);
-    closeConfig();
-    initPlayer([{ name: defaultName, artist: '', url: url, cover: defaultCover }]);
-  }
-
-  var configBtn = document.getElementById('music-config-btn');
-  if (configBtn) configBtn.addEventListener('click', openConfig);
-
-  var saveBtn = document.getElementById('music-save-btn');
-  if (saveBtn) saveBtn.addEventListener('click', saveConfig);
-
-  var inputEl = document.getElementById('music-url-input');
-  if (inputEl) inputEl.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') saveConfig();
-  });
-
-  var welcomeBtn = document.getElementById('welcome-btn');
-  if (welcomeBtn) {
-    welcomeBtn.addEventListener('click', function() {
-      welcomeClicked = true;
-      if (player && player.audio && player.audio.paused) player.play();
-    });
-  }
-})();
-</script>
-
-
-  
-
-
-<script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-<script src="/scripts/sakura.js"></script>
-
-
-<script>
-(function(){
-  // PJAX: intercept nav clicks, swap only content
-  var contentArea = document.querySelector('.skeleton-content');
-  function updateNavActive(url) {
-    document.querySelectorAll('.skeleton-nav-item').forEach(function(n) {
-      var h = n.getAttribute('href');
-      n.classList.toggle('active', h && (h === url || (h !== '/' && url.indexOf(h) === 0)));
-    });
-  }
-  function showError(msg) {
-    var existing = contentArea.querySelector('.content-inner');
-    if (existing) {
-      existing.innerHTML = '<div class="error-page"><div class="error-code">404</div><p class="error-message">' + msg + '</p><a href="/" class="error-link">回到首页</a></div>';
-    }
-  }
-  function loadPage(url, push) {
-    if (!url || url === location.pathname + location.search || url === location.href) return;
-    if (push !== false) history.pushState(null, '', url);
-    updateNavActive(url);
-    contentArea.style.opacity = '0.4';
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onload = function() {
-      contentArea.style.opacity = '1';
-      if (xhr.status < 200 || xhr.status >= 400) {
-        showError('这个页面已经走丢了……');
-        document.title = '404 | ' + document.title.split('|').pop().trim();
-        return;
-      }
-      var tmp = document.createElement('div');
-      tmp.innerHTML = xhr.responseText;
-      var newContent = tmp.querySelector('.content-inner');
-      var newTitle = tmp.querySelector('title');
-      var existing = contentArea.querySelector('.content-inner');
-      if (existing && newContent) {
-        existing.innerHTML = newContent.innerHTML;
-      } else if (existing) {
-        showError('这个页面暂时没有内容');
-      }
-      if (newTitle) document.title = newTitle.textContent;
-    };
-    xhr.onerror = function() {
-      contentArea.style.opacity = '1';
-      showError('加载失败，请检查网络连接');
-    };
-    xhr.send();
-  }
-  function pjaxFetch(url) { loadPage(url, false); }
-  updateNavActive(location.pathname);
-  document.addEventListener('click', function(e) {
-    var link = e.target.closest('a');
-    if (!link) return;
-    var href = link.getAttribute('href');
-    if (!href || href.startsWith('#') || href.startsWith('mailto:')) return;
-    if (href.startsWith('http') || href.startsWith('//')) {
-      try {
-        var url = new URL(href);
-        if (url.hostname !== location.hostname) return;
-        href = url.pathname + url.search;
-      } catch(e) { return; }
-    }
-    if (link.closest('.bg-widget, .welcome-btn, #welcome-btn, .pagination-link')) return;
-    e.preventDefault();
-    loadPage(href);
-  });
-
-  window.addEventListener('popstate', function() {
-    updateNavActive(location.pathname);
-    pjaxFetch(location.href);
-  });
-
-  var canvas = document.getElementById('sakura');
-  var overlay = document.getElementById('welcome-overlay');
-  var sakuraContainer = document.getElementById('sakura-container');
-  var welcomeBtn = document.getElementById('welcome-btn');
-  if (overlay && welcomeBtn && canvas && sakuraContainer) {
-    var visited = false;
-    try { visited = sessionStorage.getItem('memory-welcomed') === 'true'; } catch(e) {}
-    if (!visited) {
-      overlay.insertBefore(canvas, overlay.firstChild);
-      overlay.classList.add('is-active');
-      startLoader();
-    }
-    welcomeBtn.addEventListener('click', function() {
-      sakuraContainer.insertBefore(canvas, sakuraContainer.firstChild);
-      overlay.classList.remove('is-active');
-      overlay.classList.add('is-fading');
-      try { sessionStorage.setItem('memory-welcomed', 'true'); } catch(e) {}
-    });
-  }
-  function startLoader() {
-    var bar = document.getElementById('welcome-loader-bar');
-    var text = document.getElementById('welcome-loader-text');
-    var btn = document.getElementById('welcome-btn');
-    if (!bar || !text) return;
-    var msgs = [
-      '正在尝试瞎编文章','加载用户头像中',
-      '寻找丢失的像素','格式化大脑缓存',
-      '安装回忆模块','校准时间轴中',
-      '收集零碎记忆','初始化完成度 42%',
-      '充能中 请勿拔掉电源','召唤远古服务器',
-      '下载更多 RAM','粒子碰撞模拟中',
-      '配置人生参数','同步次元数据',
-      '上传灵魂至云端','编译日常逻辑',
-      '解压儿时回忆','计算人生意义'
-    ];
-    var progress = 0;
-    var msgIndex = Math.floor(Math.random() * msgs.length);
-    function step() {
-      progress += Math.random() * 6 + 2;
-      if (progress >= 100) {
-        progress = 100;
-        bar.style.width = '100%';
-        if (text) text.textContent = '加载完成';
-        if (btn) btn.classList.add('is-visible');
-        return;
-      }
-      bar.style.width = progress + '%';
-      if (text) text.textContent = msgs[msgIndex % msgs.length];
-      msgIndex++;
-      setTimeout(step, 350 + Math.random() * 200);
-    }
-    step();
-  }
-})();
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" integrity="sha512-QD3g4E4kE8o3RZCNVqFMYq/okXGDH9G14HqmtltoM+N9yqVsUT6WhAFG78KGjYNhjWTxpPjFiNBk/sKL8B5EfQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>console.log("\n%c ✦ Gridea Pro v1.2.2 %c · Theme: memory v1.0.0 · https://gridea.pro %c\n","color:#fadfa3;background:#111111;padding:9px 14px;border-radius:4px 0 0 4px;font-weight:500;font-size:12px","color:#e05c00;background:#fff3ec;padding:9px 14px;border-radius:0 4px 4px 0;font-size:11px","")</script>
+
+<script>
+(function(){
+  var pv = document.getElementById('busuanzi_value_site_pv');
+  if (pv) {
+    var t = setTimeout(function() {
+      if (pv.textContent === '0' || pv.textContent === '') pv.textContent = '--';
+    }, 5000);
+    var obs = new MutationObserver(function() {
+      if (pv.textContent !== '0' && pv.textContent !== '' && pv.textContent !== '--') {
+        clearTimeout(t); obs.disconnect();
+      }
+    });
+    obs.observe(pv, { childList: true, characterData: true });
+  }
+})();
+</script>
+
+<script src="/scripts/glsl-shaders.js"></script>
+<script src="/scripts/music-player.js"></script>
+<script src="/scripts/pjax.js"></script>
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 </body>
 </html>

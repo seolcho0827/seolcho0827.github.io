@@ -1534,5 +1534,71 @@ body::after {
 
   .skeleton-content {
     padding: 14px;
+    padding-bottom: 60px;
   }
+}
+
+/* ===== Accessibility & Focus ===== */
+
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  z-index: 10000;
+  padding: 8px 20px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  transform: translateX(-50%);
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0;
+  text-decoration: none;
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Welcome overlay: keep sakura canvas behind content */
+.welcome-overlay.is-active ~ #sakura-container {
+  z-index: 9998;
+}
+
+/* Skip to content link for accessibility */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  z-index: 10000;
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  transform: translateX(-50%);
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Visible focus indicators for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Ensure sakura container is behind welcome overlay properly */
+.welcome-overlay.is-active ~ #sakura-container {
+  z-index: 9998;
 }

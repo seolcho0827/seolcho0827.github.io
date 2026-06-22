@@ -268,8 +268,9 @@ BlossomParticle.prototype.update = function (dt, et) {
 function createPointFlowers() {
     var prm = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
     renderSpec.pointSize = {'min':prm[0], 'max':prm[1]};
-    var vtxsrc = document.getElementById("sakura_point_vsh").textContent;
-    var frgsrc = document.getElementById("sakura_point_fsh").textContent;
+    var sh = window.__shaders || {};
+    var vtxsrc = sh.sakura_point_vsh || (document.getElementById("sakura_point_vsh") || {}).textContent || '';
+    var frgsrc = sh.sakura_point_fsh || (document.getElementById("sakura_point_fsh") || {}).textContent || '';
     pointFlower.program = createShader(
         vtxsrc, frgsrc,
         ['uProjection', 'uModelview', 'uResolution', 'uOffset', 'uDOF', 'uFade'],
@@ -481,16 +482,20 @@ function unuseEffect(fxobj) {
 
 var effectLib = {};
 function createEffectLib() {
+    var sh = window.__shaders || {};
+    function getShader(id) {
+        return sh[id] || (document.getElementById(id) || {}).textContent || '';
+    }
     var vtxsrc, frgsrc;
-    var cmnvtxsrc = document.getElementById("fx_common_vsh").textContent;
-    frgsrc = document.getElementById("bg_fsh").textContent;
+    var cmnvtxsrc = getShader('fx_common_vsh');
+    frgsrc = getShader('bg_fsh');
     effectLib.sceneBg = createEffectProgram(cmnvtxsrc, frgsrc, ['uTimes'], null);
-    frgsrc = document.getElementById("fx_brightbuf_fsh").textContent;
+    frgsrc = getShader('fx_brightbuf_fsh');
     effectLib.mkBrightBuf = createEffectProgram(cmnvtxsrc, frgsrc, null, null);
-    frgsrc = document.getElementById("fx_dirblur_r4_fsh").textContent;
+    frgsrc = getShader('fx_dirblur_r4_fsh');
     effectLib.dirBlur = createEffectProgram(cmnvtxsrc, frgsrc, ['uBlurDir'], null);
-    vtxsrc = document.getElementById("pp_final_vsh").textContent;
-    frgsrc = document.getElementById("pp_final_fsh").textContent;
+    vtxsrc = getShader('pp_final_vsh');
+    frgsrc = getShader('pp_final_fsh');
     effectLib.finalComp = createEffectProgram(vtxsrc, frgsrc, ['uBloom'], null);
 }
 
@@ -637,5 +642,5 @@ window.addEventListener('load', function(e) {
 });
 
 (function (w, r) {
-    w['r'+r] = w['r'+r] || w['webkitR'+r] || w['mozR'+r] || w['msR'+r] || w['oR'+r] || function(c){ w.setTimeout(c, 1000 / 60); };
+    w[r] = w[r] || w['webkit' + r.charAt(0).toUpperCase() + r.slice(1)] || w['moz' + r.charAt(0).toUpperCase() + r.slice(1)] || w['ms' + r.charAt(0).toUpperCase() + r.slice(1)] || w['o' + r.charAt(0).toUpperCase() + r.slice(1)] || function(c){ w.setTimeout(c, 1000 / 60); };
 })(window, 'requestAnimationFrame');

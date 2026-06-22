@@ -2,12 +2,29 @@
 var CACHE_NAME = 'gridea-v1781510380';
 var OFFLINE_URL = '/offline.html';
 
-// 安装：预缓存离线页面
+// 安装：预缓存核心资源
+var PRECACHE_URLS = [
+  OFFLINE_URL,
+  '/styles/style.css',
+  '/scripts/sakura.js',
+  '/scripts/glsl-shaders.js',
+  '/scripts/music-player.js',
+  '/scripts/pjax.js',
+  '/manifest.json',
+  '/images/avatar.png',
+  '/images/icons/icon-192x192.png',
+  '/images/icons/icon-512x512.png'
+];
+
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.add(OFFLINE_URL);
+      return cache.addAll(PRECACHE_URLS);
     }).then(function() {
+      return self.skipWaiting();
+    }).catch(function(err) {
+      // 即使部分资源缓存失败也不阻塞安装
+      console.warn('[SW] precache failed:', err);
       return self.skipWaiting();
     })
   );
